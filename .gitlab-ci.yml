@@ -21,6 +21,9 @@ react-build:
         -t $DOCKER_TAG
         $DOCKERFILE_PATH
         --push
+  rules:
+    - changes:
+      - react-frontend/**/*
 
 spring-build:
   stage: build
@@ -42,3 +45,6 @@ spring-build:
         -t $DOCKER_TAG
         $DOCKERFILE_PATH
         --push
+  rules:
+    - changes:
+      - spring-backend/**/*
