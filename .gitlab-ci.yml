@@ -1,50 +1,28 @@
 stages:
   - build
 
+include:
+  - project: 8tima18/docker-build-template
+    ref: main
+    file:
+      - build-job.yml
+
 react-build:
+  extends: .build-docker-template
   stage: build
-  image:
-    name: docker:24.0.5
-    entrypoint: [""]
-  services:
-    - docker:24.0.5-dind
   variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
     DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
     DOCKERFILE_PATH: "./react-frontend/"
-  script:
-    - docker buildx create --use
-    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
-    - docker buildx build
-        --cache-from=type=registry,ref=$DOCKER_TAG
-        --cache-to=type=registry,ref=$DOCKER_TAG,mode=max
-        -t $DOCKER_TAG
-        $DOCKERFILE_PATH
-        --push
   rules:
     - changes:
       - react-frontend/**/*
 
 spring-build:
+  extends: .build-docker-template
   stage: build
-  image:
-    name: docker:24.0.5
-    entrypoint: [""]
-  services:
-    - docker:24.0.5-dind
   variables:
-    DOCKER_CLI_EXPERIMENTAL: enabled
     DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
     DOCKERFILE_PATH: "./spring-backend/"
-  script:
-    - docker buildx create --use
-    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
-    - docker buildx build
-        --cache-from=type=registry,ref=$DOCKER_TAG
-        --cache-to=type=registry,ref=$DOCKER_TAG,mode=max
-        -t $DOCKER_TAG
-        $DOCKERFILE_PATH
-        --push
   rules:
     - changes:
       - spring-backend/**/*
