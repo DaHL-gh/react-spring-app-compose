@@ -29,10 +29,10 @@ spring-build:
     DOCKERFILE_PATH: "./spring-backend/"
   script:
     - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
-    - buildah bud \
-      --layers\
-      --cache-from /cache\
-      --cache-to /cache\
-      -t $DOCKER_TAG\
+    - buildah bud
+      --layers
+      --cache-from /cache
+      --cache-to /cache
+      -t $DOCKER_TAG
       $DOCKERFILE_PATH
     - buildah push $DOCKER_TAG docker://$DOCKER_TAG
