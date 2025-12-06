@@ -11,11 +11,11 @@ react-build:
     DOCKERFILE_PATH: "./react-frontend/"
   script:
     - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
-    - buildah bud \
-      --layers\
-      --cache-from /cache\
-      --cache-to /cache\
-      -t $DOCKER_TAG\
+    - buildah bud
+      --layers
+      --cache-from /cache
+      --cache-to /cache
+      -t $DOCKER_TAG
       $DOCKERFILE_PATH
     - buildah push $DOCKER_TAG docker://docker.io/$DOCKER_TAG
 
