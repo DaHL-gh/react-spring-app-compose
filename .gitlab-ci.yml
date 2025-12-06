@@ -8,19 +8,26 @@ stages:
 
 react-build:
   stage: build
+  image: quay.io/buildah/stable
   variables:
+    BUILDAH_ISOLATION: chroot
+    STORAGE_DRIVER: vfs
     DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
     DOCKERFILE_PATH: "./react-frontend/"
   script:
-    - docker build -t "$DOCKER_TAG" "$DOCKERFILE_PATH"
-    - docker push "$DOCKER_TAG"
+    - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
+    - buildah bud -t $DOCKER_TAG $DOCKERFILE_PATH
+    - buildah push $DOCKER_TAG docker://docker.io/$DOCKER_TAG
 
 spring-build:
   stage: build
+  image: quay.io/buildah/stable
   variables:
+    BUILDAH_ISOLATION: chroot
+    STORAGE_DRIVER: vfs
     DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
     DOCKERFILE_PATH: "./spring-backend/"
   script:
-    - docker build -t "$DOCKER_TAG" "$DOCKERFILE_PATH"
-    - docker push "$DOCKER_TAG"
-
+    - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
+    - buildah bud -t $DOCKER_TAG $DOCKERFILE_PATH
+    - buildah push $DOCKER_TAG docker://docker.io/$DOCKER_TAG
