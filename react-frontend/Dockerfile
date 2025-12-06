@@ -1,5 +1,5 @@
 # строим react приложение
-FROM node:18-alpine AS build
+FROM docker.io/library/node:18-alpine AS build
 
 WORKDIR /app
 
@@ -11,7 +11,7 @@ COPY ./src ./src
 RUN npm run build
 
 # сервим результат с nginx
-FROM nginx:1.28-alpine
+FROM docker.io/library/nginx:1.28-alpine
 
 COPY --from=build /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
