@@ -13,8 +13,8 @@ react-build:
     - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
     - buildah bud
       --layers
-      --cache-from /cache
-      --cache-to /cache
+      --cache-from=type=local,src=/cache
+      --cache-to=type=local,dest=/cache,mode=max
       -t $DOCKER_TAG
       $DOCKERFILE_PATH
     - buildah push $DOCKER_TAG docker://docker.io/$DOCKER_TAG
@@ -31,8 +31,8 @@ spring-build:
     - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
     - buildah bud
       --layers
-      --cache-from /cache
-      --cache-to /cache
+      --cache-from=type=local,src=/cache
+      --cache-to=type=local,dest=/cache,mode=max
       -t $DOCKER_TAG
       $DOCKERFILE_PATH
     - buildah push $DOCKER_TAG docker://$DOCKER_TAG
