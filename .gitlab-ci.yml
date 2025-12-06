@@ -1,5 +1,6 @@
 default:
-  tag: react-spring-app
+  tags: 
+  - react-spring-app
 
 stages:
   - build
