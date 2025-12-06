@@ -13,6 +13,7 @@ react-build:
     DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
     DOCKERFILE_PATH: "./react-frontend/"
   script:
+    - docker buildx create --use
     - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker buildx build
         --cache-from=type=registry,ref=$DOCKER_TAG
@@ -33,6 +34,7 @@ spring-build:
     DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
     DOCKERFILE_PATH: "./spring-backend/"
   script:
+    - docker buildx create --use
     - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
     - docker buildx build
         --cache-from=type=registry,ref=$DOCKER_TAG
