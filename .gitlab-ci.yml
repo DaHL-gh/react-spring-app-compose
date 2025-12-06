@@ -1,38 +1,58 @@
 stages:
   - build
 
-react-build:
+spring-build:
   stage: build
-  image: quay.io/buildah/stable
+  image:
+    name: docker:24.0.5
+    entrypoint: [""]
+  services:
+    - docker:24.0.5-dind
   variables:
-    BUILDAH_ISOLATION: chroot
-    STORAGE_DRIVER: vfs
+    DOCKER_CLI_EXPERIMENTAL: enabled
     DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
     DOCKERFILE_PATH: "./react-frontend/"
   script:
-    - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
-    - buildah bud
-      --layers
-      --cache-from $CI_REGISTRY_IMAGE/cache
-      --cache-to $CI_REGISTRY_IMAGE/cache,mode=max
-      -t $DOCKER_TAG
-      $DOCKERFILE_PATH
-    - buildah push $DOCKER_TAG docker://docker.io/$DOCKER_TAG
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - docker buildx build
+        --cache-from=type=registry,ref=$DOCKER_TAG
+        --cache-to=type=registry,ref=$DOCKER_TAG,mode=max
+        -t $DOCKER_TAG
+        $DOCKERFILE_PATH
+        --push
 
+# spring-build:
+#   stage: build
+#   image: quay.io/buildah/stable
+#   variables:
+#     BUILDAH_ISOLATION: chroot
+#     STORAGE_DRIVER: vfs
+#   script:
+#     - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
+#     - buildah bud
+#       --layers
+#       --cache-from $CI_REGISTRY_IMAGE/cache
+#       --cache-to $CI_REGISTRY_IMAGE/cache
+#       -t $DOCKER_TAG
+#       $DOCKERFILE_PATH
+#     - buildah push $DOCKER_TAG docker://$DOCKER_TAG
+#
 spring-build:
   stage: build
-  image: quay.io/buildah/stable
+  image:
+    name: docker:24.0.5
+    entrypoint: [""]
+  services:
+    - docker:24.0.5-dind
   variables:
-    BUILDAH_ISOLATION: chroot
-    STORAGE_DRIVER: vfs
+    DOCKER_CLI_EXPERIMENTAL: enabled
     DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
     DOCKERFILE_PATH: "./spring-backend/"
   script:
-    - buildah login -u "$DOCKERHUB_USER" -p "$DOCKERHUB_PASSWORD" docker.io
-    - buildah bud
-      --layers
-      --cache-from $CI_REGISTRY_IMAGE/cache
-      --cache-to $CI_REGISTRY_IMAGE/cache
-      -t $DOCKER_TAG
-      $DOCKERFILE_PATH
-    - buildah push $DOCKER_TAG docker://$DOCKER_TAG
+    - echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin
+    - docker buildx build
+        --cache-from=type=registry,ref=$DOCKER_TAG
+        --cache-to=type=registry,ref=$DOCKER_TAG,mode=max
+        -t $DOCKER_TAG
+        $DOCKERFILE_PATH
+        --push
