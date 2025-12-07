@@ -42,7 +42,7 @@ react-build:
   extends: .build-docker-template
   stage: build
   variables:
-    DOCKER_TAG: "dahl8dh/hobbie-react-frontend"
+    DOCKER_REPO: "dahl8dh/hobbie-react-frontend"
     DOCKER_TAG: "v1"
     DOCKERFILE_PATH: "./react-frontend/"
   # rules:
