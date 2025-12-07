@@ -73,8 +73,8 @@ deploy:
   - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
   - chmod 644 ~/.ssh/known_hosts
   script:
-  - scp docker-compose.yml "$SSH_USER@$VM_IPADDRESS":~/docker-compose.yml
-  - ssh $SSH_USER@$VM_IPADDRESS "
+  - scp $DOTENV_FILE docker-compose.yml "$SSH_USER@$VM_IPADDRESS":~/deploy/
+  - ssh $SSH_USER@$VM_IPADDRESS "cd ~/deploy/
     docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD;
     docker compose down;
     docker compose up --remove-orphans --force-recreate -d"
