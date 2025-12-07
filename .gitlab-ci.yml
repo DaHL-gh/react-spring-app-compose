@@ -14,9 +14,9 @@ react-test:
     - npm install
     - npm test
     - cd ..
-  # rules:
-  #   - changes:
-  #     - react-frontend/**/*
+  rules:
+    - changes:
+      - react-frontend/**/*
   allow_failure: false
 
 spring-test:
@@ -27,9 +27,9 @@ spring-test:
   script:
     - echo "running Spring tests..."
     - mvn test -f $PROJECT_PATH/pom.xml
-  # rules:
-  #   - changes:
-  #     - spring-backend/**/*
+  rules:
+    - changes:
+      - spring-backend/**/*
   allow_failure: false
 
 include:
@@ -64,15 +64,15 @@ deploy:
   needs:
     - react-build
     - spring-build
-  before_script: 
-  - 'command -v ssh-agent >/dev/null || ( apk add --update openssh )' 
-  - eval $(ssh-agent -s) 
-  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - 
-  - mkdir -p ~/.ssh 
-  - chmod 700 ~/.ssh 
-  - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts 
-  - chmod 644 ~/.ssh/known_hosts 
-  script: 
+  before_script:
+  - apk add --update openssh
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY_BASE64" | base64 -d | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - ssh-keyscan $VM_IPADDRESS >> ~/.ssh/known_hosts
+  - chmod 644 ~/.ssh/known_hosts
+  script:
   - scp docker-compose.yml "$SSH_USER@$VM_IPADDRESS":~/docker-compose.yml
   - ssh $SSH_USER@$VM_IPADDRESS "
     docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD;
