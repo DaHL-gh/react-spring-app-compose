@@ -1,5 +1,37 @@
 stages:
+  - test
   - build
+
+react-test:
+  stage: test
+  image: docker.io/library/node:18-alpine
+  variables:
+    PROJECT_PATH: "./react-frontend"
+  script:
+    - echo "running React tests..."
+    - cd $PROJECT_PATH
+    - npm install
+    - npm test
+    - cd ..
+  # rules:
+  #   - changes:
+  #     - react-frontend/**/*
+  allow_failure: false
+
+spring-test:
+  stage: test
+  image: docker.io/library/maven:3.8.5-openjdk-17
+  variables:
+    PROJECT_PATH: "./spring-backend"
+  script:
+    - echo "running Spring tests..."
+    - cd $PROJECT_PATH
+    - ./mvnw test 
+    - cd ..
+  # rules:
+  #   - changes:
+  #     - spring-backend/**/*
+  allow_failure: false
 
 include:
   - project: 8tima18/docker-build-template
@@ -13,9 +45,9 @@ react-build:
   variables:
     DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
     DOCKERFILE_PATH: "./react-frontend/"
-  rules:
-    - changes:
-      - react-frontend/**/*
+  # rules:
+  #   - changes:
+  #     - react-frontend/**/*
 
 spring-build:
   extends: .build-docker-template
@@ -23,6 +55,7 @@ spring-build:
   variables:
     DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
     DOCKERFILE_PATH: "./spring-backend/"
-  rules:
-    - changes:
-      - spring-backend/**/*
+  # rules:
+  #   - changes:
+  #     - spring-backend/**/*
+

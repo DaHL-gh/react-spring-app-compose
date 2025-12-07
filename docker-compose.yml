@@ -12,9 +12,7 @@ services:
       - app-network
 
   backend:
-    build:
-      context: ./spring-backend
-      dockerfile: Dockerfile
+    image: dahl8dh/hobbie-react-frontend:v1
     environment:
       SPRING_PROFILES_ACTIVE: docker
       DB_HOST: db
@@ -29,9 +27,7 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: ./react-frontend
-      dockerfile: Dockerfile
+    image: dahl8dh/hobbie-spring-backend:v1
     networks:
       - app-network
 
