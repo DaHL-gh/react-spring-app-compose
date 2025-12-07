@@ -25,9 +25,7 @@ spring-test:
     PROJECT_PATH: "./spring-backend"
   script:
     - echo "running Spring tests..."
-    - cd $PROJECT_PATH
-    - ./mvnw test 
-    - cd ..
+    - ./mvn test -f $PROJECT_PATH/pom.xml
   # rules:
   #   - changes:
   #     - spring-backend/**/*
