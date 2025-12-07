@@ -42,7 +42,8 @@ react-build:
   extends: .build-docker-template
   stage: build
   variables:
-    DOCKER_TAG: "dahl8dh/hobbie-react-frontend:v1"
+    DOCKER_TAG: "dahl8dh/hobbie-react-frontend"
+    DOCKER_TAG: "v1"
     DOCKERFILE_PATH: "./react-frontend/"
   # rules:
   #   - changes:
@@ -52,7 +53,8 @@ spring-build:
   extends: .build-docker-template
   stage: build
   variables:
-    DOCKER_TAG: "dahl8dh/hobbie-spring-backend:v1"
+    DOCKER_REPO: "dahl8dh/hobbie-spring-backend"
+    DOCKER_TAG: "v1"
     DOCKERFILE_PATH: "./spring-backend/"
   # rules:
   #   - changes:
@@ -77,6 +79,6 @@ deploy:
   - scp docker-compose.yml "$SSH_USER@$VM_IPADDRESS":~/deploy/docker-compose.yml
   - ssh $SSH_USER@$VM_IPADDRESS "
     cd ~/deploy/ &&
-    docker login -u $DOCKERHUB_USER -p $DOCKERHUB_PASSWORD &&
+    "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USER" --password-stdin &&
     docker compose down &&
     docker compose up --remove-orphans --force-recreate -d"
